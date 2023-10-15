@@ -1,5 +1,4 @@
-declare const pycmd: (cmd: string) => void;
-declare const chartData: Record<string, number>;
+import "../bridge";
 
 // addEventListener("DOMContentLoaded", function () {});
 
@@ -15,5 +14,44 @@ declare const chartData: Record<string, number>;
 //         }
 //     });
 
-const statLine = document.querySelector(".stats-line");
-const thing = document.querySelector(".temp");
+/* ======================== *\
+    #Render Stats
+\* ======================== */
+
+const reviewed = document.querySelector(".reviewed__num");
+if (reviewed)
+    reviewed.textContent = `${chartData.todaysTotal} ${chartData.displayImprovment}`;
+
+const statLine = document.querySelector(".stat-line");
+if (statLine) {
+    renderStat(statLine, "Personal Best: ", chartData.personalBest);
+    renderStat(statLine, "Total Days: ", chartData.totalDays);
+    renderStat(statLine, "Total Reviews: ", chartData.totalReviews);
+}
+
+/* ======================== *\
+    #Utils
+\* ======================== */
+
+function renderStat<T extends Element>(
+    elem: T,
+    label: string,
+    value: number
+): T {
+    // label
+    const text = document.createTextNode(label);
+
+    // value
+    const span = document.createElement("span");
+    span.classList.add("highlight");
+    span.textContent = value.toString();
+
+    // Add to parent element
+    const li = document.createElement("li");
+    li.appendChild(text);
+    li.appendChild(span);
+
+    // mutate element
+    elem.appendChild(li);
+    return elem;
+}
