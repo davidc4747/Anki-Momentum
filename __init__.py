@@ -1,6 +1,5 @@
 import pathlib
-
-# import os
+import json
 
 from datetime import datetime
 from functools import reduce
@@ -63,17 +62,22 @@ def deckBrowserNoncontinuousStats(self, _old):
     )
     content = path.read_text()
 
+    # Prepare stats in a a JSON format, to be sent to the frontend
+    chartdata = json.dumps(
+        {
+            "todaysTotal": todaysTotal,
+            "displayImprovment": displayImprovment,
+            "personalWorst": personalWorst,
+            "personalBest": personalBest,
+            "totalDays": totalDays,
+            "totalReviews": totalReviews,
+        },
+    )
+
     return (
         f"""
 		<script type="text/javascript"> 
-            const chartData = {{
-                todaysTotal: {todaysTotal},
-                displayImprovment: {displayImprovment!r},
-                personalWorst: {personalWorst},
-                personalBest: {personalBest},
-                totalDays: {totalDays},
-                totalReviews: {totalReviews},
-            }}
+            const chartData = {chartdata};
 		</script>
         """
         + f"{content}"
