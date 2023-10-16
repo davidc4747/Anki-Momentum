@@ -21,7 +21,7 @@ def deckBrowserNoncontinuousStats(self, _old):
     # orginalHTML = _old(self)
 
     # Pull Review data from the DB
-    NUM_OF_DAYS = 14  # 100
+    NUM_OF_DAYS = 10  # 100
     nextDayOffset = datetime.fromtimestamp(mw.col.crt).hour * 3600
     # statList = mw.col.db.all(
     #     f"SELECT DATE(id / 1000 - {nextDayOffset}, 'unixepoch', 'localtime') AS day, COUNT() FROM revlog GROUP BY day ORDER BY day DESC LIMIT {NUM_OF_DAYS}"
@@ -65,6 +65,7 @@ def deckBrowserNoncontinuousStats(self, _old):
     # Prepare stats in a a JSON format, to be sent to the frontend
     chartdata = json.dumps(
         {
+            "last10": statList[:NUM_OF_DAYS],
             "todaysTotal": todaysTotal,
             "displayImprovment": displayImprovment,
             "personalWorst": personalWorst,

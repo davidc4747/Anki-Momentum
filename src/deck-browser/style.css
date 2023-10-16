@@ -44,3 +44,23 @@
 .highlight {
     font-weight: bold;
 }
+
+/* ======================== *\
+    #Chart
+\* ======================== */
+
+.chart {
+    padding: 0.6rem;
+    background-color: #c8c8c8;
+}
+
+.line {
+    fill: none;
+    stroke: rebeccapurple;
+    stroke-width: 4;
+}
+
+.point {
+    fill: rebeccapurple;
+    stroke: white;
+}
