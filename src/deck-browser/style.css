@@ -50,6 +50,8 @@
 \* ======================== */
 
 .chart {
+    margin: 0.5rem 0;
+    border-radius: 0.25rem;
     background-color: #c8c8c8;
 }
 
@@ -62,4 +64,6 @@
 .point {
     fill: rebeccapurple;
     stroke: white;
+
+    transition: 0.2s scale ease-out;
 }
