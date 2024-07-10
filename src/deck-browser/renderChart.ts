@@ -5,7 +5,7 @@ import { select, create, line, scaleLinear, axisLeft, extent } from "d3";
 \* ======================== */
 
 export function renderChart(data: [string, number][]): SVGSVGElement | null {
-    const MARGIN = { top: 32, right: 16, bottom: 32, left: 32 };
+    const MARGIN = { top: 12, right: 12, bottom: 12, left: 32 };
     const SVG_WIDTH = 600,
         SVG_HEIGHT = 150;
 
@@ -32,7 +32,7 @@ export function renderChart(data: [string, number][]): SVGSVGElement | null {
     // Draw Axis
     svg.append("g").call(axisLeft(valScale).ticks(4));
     svg.selectAll(".tick line")
-        .attr("opacity", "0.5")
+        .attr("opacity", "0.2")
         .attr("stroke-dasharray", "2,2")
         .attr("x2", SVG_WIDTH);
     svg.selectAll(".domain").remove();
@@ -46,7 +46,7 @@ export function renderChart(data: [string, number][]): SVGSVGElement | null {
         .attr("d", lineFunc);
 
     // Draw Circles
-    const CIRCLE_RADIUS = 6;
+    const CIRCLE_RADIUS = 8;
     svg.append("g")
         .selectAll("circle")
         .data(data)

@@ -2,8 +2,23 @@
     #
 \* ======================== */
 
+/* Remove default anki stats */
+#studiedToday {
+    display: none;
+}
+
 .momentum {
-    margin: 6px 0 1rem;
+    width: 80%;
+
+    margin: 0.4rem 0 1rem;
+    padding: 1rem 1.75rem 0.75rem 1.25rem;
+
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0px 2px 1px -1px rgba(20, 20, 20, 0.12),
+        0px 1px 1px 0px rgba(20, 20, 20, 0.06),
+        0px 1px 3px 0px rgba(20, 20, 20, 0.04);
+    background: var(--canvas-glass);
 }
 
 /* ======================== *\
@@ -12,17 +27,18 @@
 
 .reviewed-today {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin: 0.3rem 0;
+    justify-content: space-between;
+
+    margin: 0 0 0.3rem;
+    padding-bottom: 0.25em;
+    border-bottom: 1px solid var(--border);
+
+    font-weight: bold;
 }
 .reviewed__lbl {
-    font-weight: bold;
 }
 .reviewed__num {
-    font-weight: bold;
-    font-size: 2rem;
-
     padding: 0.3rem;
 }
 
@@ -31,14 +47,13 @@
 \* ======================== */
 
 .stat-line {
-    /* normalize */
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-
     display: flex;
     justify-content: space-between;
-    max-width: 500px;
+
+    /* normalize the ul */
+    margin: 0.3rem 0;
+    padding: 0;
+    list-style-type: none;
 }
 
 .highlight {
@@ -51,19 +66,15 @@
 
 .chart {
     margin: 0.5rem 0;
-    border-radius: 0.25rem;
-    background-color: #c8c8c8;
 }
 
 .line {
     fill: none;
-    stroke: rebeccapurple;
-    stroke-width: 4;
+    stroke: var(--button-primary-bg);
+    stroke-width: 5;
 }
 
 .point {
-    fill: rebeccapurple;
-    stroke: white;
-
+    fill: var(--button-primary-bg);
     transition: 0.2s scale ease-out;
 }

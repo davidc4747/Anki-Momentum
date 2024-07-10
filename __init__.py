@@ -105,10 +105,10 @@ def hideReviewNumbers(deck_browser: DeckBrowser, content: DeckBrowserContent) ->
                 left: 50%;
                 translate: -50%;
             }
-            span.review-count { background-color: #16a34a; }
-            span.learn-count { background-color: #f87171; }
-            span.new-count { background-color: #1d4ed8; }
-            span.zero-count { background-color: #545454; opacity: 0.25; }
+            span.review-count { background-color: var(--state-review); }
+            span.learn-count { background-color: var(--state-learn); }
+            span.new-count { background-color: var(--state-new); }
+            span.zero-count { background-color: var(--fg-faint); }
         </style>
         """
 
