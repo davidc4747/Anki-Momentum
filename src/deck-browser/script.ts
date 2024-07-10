@@ -1,9 +1,6 @@
-import "../bridge";
 import { renderChart } from "./renderChart";
-
-// TODO: REMOVE THIS [DC]
-// import { testData } from "../bridge";
-// const chartData = testData();
+import { getChartData } from "../bridge";
+const chartData = getChartData();
 
 /* ======================== *\
     #Render Stats

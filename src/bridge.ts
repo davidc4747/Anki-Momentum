@@ -1,5 +1,4 @@
 declare const pycmd: (cmd: string) => void;
-
 declare const chartData: ChartData;
 
 type ChartData = {
@@ -34,4 +33,8 @@ export function testData(): ChartData {
         totalDays: 552,
         totalReviews: 38144,
     } as ChartData;
+}
+
+export function getChartData(): ChartData {
+    return chartData;
 }
