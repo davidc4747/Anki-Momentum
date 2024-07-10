@@ -5,20 +5,16 @@ from datetime import datetime
 from functools import reduce
 from math import floor
 
-from aqt import mw
-from aqt.utils import showInfo
-
-from anki.hooks import wrap
-from aqt import gui_hooks
-from aqt.deckbrowser import DeckBrowser
+from aqt import gui_hooks, mw
+from aqt.deckbrowser import DeckBrowser, DeckBrowserContent
+from aqt.overview import Overview, OverviewContent
 
 
 # Edit UI Elements
 #########################################################################
 
 
-def deckBrowserNoncontinuousStats(self, _old):
-    # orginalHTML = _old(self)
+def momentumStats() -> str:
 
     # Pull Review data from the DB
     NUM_OF_DAYS = 10  # 100
@@ -56,7 +52,7 @@ def deckBrowserNoncontinuousStats(self, _old):
     path = (
         # C:\...\AppData\Roaming\Anki2\addons21
         pathlib.Path(mw.pm.addonFolder())
-        .joinpath(__name__)  # \BetterMetrics
+        .joinpath(__name__)
         .joinpath("dist/src/deck-browser/index.html")
         .resolve()
     )
@@ -85,8 +81,8 @@ def deckBrowserNoncontinuousStats(self, _old):
     )
 
 
-def hideDeckBrowserContent(deck_browser, content) -> None:
-    # showInfo(content.tree.replace("<", " "))
+def hideReviewNumbers(deck_browser: DeckBrowser, content: DeckBrowserContent) -> None:
+    content.stats = f"{momentumStats()}{content.stats}"
     content.tree += """
 		<script type="module"> 
             document.querySelectorAll("td.decktd > a.deck").forEach(ele => {
@@ -117,8 +113,10 @@ def hideDeckBrowserContent(deck_browser, content) -> None:
         """
 
 
-def hideOverviewStats(overview, content) -> None:
-    # showInfo(content.table.replace("<", " "))
+gui_hooks.deck_browser_will_render_content.append(hideReviewNumbers)
+
+
+def hideOverviewNumbers(overview: Overview, content: OverviewContent) -> None:
     content.table += """
 		<script type="module"> 
             const button = document.querySelector("button#study");
@@ -131,21 +129,4 @@ def hideOverviewStats(overview, content) -> None:
 		"""
 
 
-# Connect Hooks
-#########################################################################
-
-gui_hooks.overview_will_render_content.append(hideOverviewStats)
-gui_hooks.deck_browser_will_render_content.append(hideDeckBrowserContent)
-DeckBrowser._renderStats = wrap(
-    DeckBrowser._renderStats, deckBrowserNoncontinuousStats, "around"
-)
-
-# Helper Functions
-#########################################################################
-
-
-def renderChart():
-    # fullHistory = ""
-    # for date, count in statList:
-    #     fullHistory += f"<div>{date}......{count}</div>"
-    reduce(lambda acc, item: acc + f"<div>{item[0]}......{item[1]}</div>", statList, "")
+gui_hooks.overview_will_render_content.append(hideOverviewNumbers)
