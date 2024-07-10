@@ -78,3 +78,14 @@
     fill: var(--button-primary-bg);
     transition: 0.2s scale ease-out;
 }
+
+.avg-line {
+    stroke: var(--button-primary-bg);
+    stroke-width: 2;
+}
+
+.avg-text {
+    fill: var(--button-primary-bg);
+    text-anchor: end;
+    font-weight: bold;
+}

@@ -1,11 +1,11 @@
-import { select, create, line, scaleLinear, axisLeft, extent } from "d3";
+import { select, create, line, scaleLinear, axisLeft, extent, mean } from "d3";
 
 /* ======================== *\
     #Chart
 \* ======================== */
 
 export function renderChart(data: [string, number][]): SVGSVGElement | null {
-    const MARGIN = { top: 12, right: 12, bottom: 12, left: 32 };
+    const MARGIN = { top: 12, right: 12, bottom: 12, left: 36 };
     const SVG_WIDTH = 600,
         SVG_HEIGHT = 150;
 
@@ -30,18 +30,34 @@ export function renderChart(data: [string, number][]): SVGSVGElement | null {
     const lineFunc = line<[string, number]>(xFunc, yFunc);
 
     // Draw Axis
-    svg.append("g").call(axisLeft(valScale).ticks(4));
-    svg.selectAll(".tick line")
-        .attr("opacity", "0.2")
-        .attr("stroke-dasharray", "2,2")
-        .attr("x2", SVG_WIDTH);
-    svg.selectAll(".domain").remove();
+    // svg.append("g").call(axisLeft(valScale).ticks(3));
+    // svg.selectAll(".tick line")
+    //     .attr("opacity", "0.2")
+    //     .attr("stroke-dasharray", "9,3")
+    //     .attr("x2", SVG_WIDTH);
+    // svg.selectAll(".domain").remove();
+
+    // Draw Average line
+    const avg = mean(data, (d) => d[1]);
+    const averageY = valScale(avg ?? 0);
+    svg.append("line")
+        .classed("avg-line", true)
+        .attr("stroke-dasharray", "9,3")
+        .attr("x2", SVG_WIDTH)
+        .attr("y1", averageY)
+        .attr("y2", averageY);
+    svg.append("text")
+        .text("AVG")
+        .classed("avg-text", true)
+        .attr("dominant-baseline", "middle")
+        .attr("x", -4)
+        .attr("y", averageY);
 
     // Draw line
     svg.append("g")
         .selectAll("path")
         .data([data])
-        .join("path")
+        .join("path") // Enter + Update
         .classed("line js-line", true)
         .attr("d", lineFunc);
 
@@ -50,7 +66,7 @@ export function renderChart(data: [string, number][]): SVGSVGElement | null {
     svg.append("g")
         .selectAll("circle")
         .data(data)
-        .join("circle")
+        .join("circle") // Enter + Update
         .attr("class", "point")
         .style("transform-origin", (d, i) => `${xFunc(d, i)}px ${yFunc(d)}px`)
         .attr("cx", xFunc)
