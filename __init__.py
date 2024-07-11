@@ -94,6 +94,7 @@ def hideReviewNumbers(deck_browser: DeckBrowser, content: DeckBrowserContent) ->
             })
 		</script>
         <style> 
+            tr:first-child > th.count { text-align: center; }
             .new-count, .learn-count, .review-count, .zero-count {
                 display: block; 
                 color: transparent; 

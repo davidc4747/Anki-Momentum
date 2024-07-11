@@ -79,6 +79,10 @@
     transition: 0.2s scale ease-out;
 }
 
+/* ------------------------ *\
+    #Average Line
+\* ------------------------ */
+
 .avg-line {
     stroke: var(--button-primary-bg);
     stroke-width: 2;
@@ -88,4 +92,23 @@
     fill: var(--button-primary-bg);
     text-anchor: end;
     font-weight: bold;
+}
+
+/* ------------------------ *\
+    #Under Area
+\* ------------------------ */
+
+.under-area {
+    fill: url(#AreaGradient);
+}
+
+#AreaGradient {
+    & > .stop1 {
+        stop-color: var(--button-primary-bg);
+        stop-opacity: 0.5;
+    }
+    & > .stop2 {
+        stop-color: var(--canvas-glass);
+        stop-opacity: 0;
+    }
 }
