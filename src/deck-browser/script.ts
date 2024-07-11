@@ -13,19 +13,15 @@ if (reviewed)
     }`;
 
 const statLine = document.querySelector(".stat-line");
-if (statLine) {
-    statLine.append(
-        renderStat("Personal Best: ", chartData.personalBest),
-        renderTotalDays(chartData.totalDays),
-        renderStat("Total Reviews: ", chartData.totalReviews)
-    );
-}
+statLine?.append(
+    renderStat("Personal Best: ", chartData.personalBest),
+    renderTotalDays(chartData.totalDays),
+    renderStat("Total Reviews: ", chartData.totalReviews)
+);
 
-const chartContainer = document.querySelector(".chart");
-if (chartContainer) {
-    const svg = renderChart(chartData.last10);
-    if (svg) chartContainer.appendChild(svg);
-}
+const newChart = renderChart(chartData.last10);
+if (newChart)
+    document.querySelector(".chart-placeholder")?.replaceWith(newChart);
 
 /* ======================== *\
     #Utils

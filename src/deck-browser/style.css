@@ -112,3 +112,26 @@
         stop-opacity: 0;
     }
 }
+
+/* ------------------------ *\
+    #Tooltip
+\* ------------------------ */
+
+.tooltip {
+    pointer-events: none;
+    transition: opacity 0.15s ease-out;
+}
+.tooltip__text > text {
+    fill: white;
+    text-anchor: middle;
+}
+.tooltip__reviews {
+    font-weight: bold;
+}
+.tooltip__date {
+}
+
+.tooltip__bg {
+    fill: black;
+    opacity: 0.7;
+}
