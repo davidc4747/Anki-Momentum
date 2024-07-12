@@ -1,9 +1,10 @@
 declare const pycmd: (cmd: string) => void;
 declare const chartData: ChartData;
 
-type ChartData = {
-    recentData: [string, number][]; // <"2023-07-3", 143>
+export type ChartData = {
     // fullHistory: Map<string, number>; // <"2023-07-3", 143>
+    recentData: [string, number][]; // <"2023-07-3", 143>
+    recentBest: number;
 
     todaysTotal: number;
     improvement: number;

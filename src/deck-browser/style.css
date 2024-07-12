@@ -28,18 +28,30 @@
 .reviewed-today {
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
     margin: 0 0 0.3rem;
-    padding-bottom: 0.25em;
+    padding-bottom: 0.3em;
     border-bottom: 1px solid var(--border);
-
-    font-weight: bold;
 }
 .reviewed__lbl {
+    margin-right: auto;
+}
+.reviewed__improve {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0 0.5rem;
+    margin: 0 0.5rem;
+
+    font-size: 0.7rem;
+    font-weight: normal;
+    opacity: 0.8;
+
+    position: relative;
 }
 .reviewed__num {
-    padding: 0.3rem;
+    padding: 0 0.3rem;
 }
 
 /* ======================== *\
@@ -67,6 +79,24 @@
 .chart {
     margin: 0.5rem 0;
 }
+
+.high-score {
+    float: right;
+
+    margin: 0.2rem 0.6rem;
+    padding: 0.2rem 0.6rem;
+
+    color: white;
+    background-color: var(--button-primary-bg);
+    border-radius: 0.3rem;
+
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+/* ------------------------ *\
+    #line Graph
+\* ------------------------ */
 
 .line {
     fill: none;

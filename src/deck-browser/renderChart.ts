@@ -1,13 +1,25 @@
 import { select, line, area, scaleLinear, extent, mean } from "d3";
+import { ChartData } from "../bridge";
 
 /* ======================== *\
     #Chart
 \* ======================== */
 
-export function renderChart(recentData: [string, number][]): HTMLElement {
+export function renderChart(chartData: ChartData): HTMLElement {
+    const { recentBest, personalBest, todaysTotal, recentData } = chartData;
+
     // Containing Div
     const chartElem = document.createElement("div");
     chartElem.classList.add("chart");
+
+    // High Score!
+    if (todaysTotal > recentBest) {
+        const highScore = document.createElement("div");
+        highScore.classList.add("high-score");
+        highScore.textContent =
+            todaysTotal > personalBest ? `PERSONAL BEST!!!` : `HIGH SCORE!`;
+        chartElem.appendChild(highScore);
+    }
 
     // Svg
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");

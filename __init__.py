@@ -33,8 +33,9 @@ def momentumStats() -> str:
     # All Time Stats
     totalReviews = reduce(lambda acc, item: acc + item[1], statList, 0)
     totalDays = len(statList)
-    personalWorst = min(map(lambda item: item[1], statList))
-    personalBest = max(map(lambda item: item[1], statList))
+    personal = [num for dateStr, num in statList if not dateStr == todayString]
+    personalWorst = min(personal)
+    personalBest = max(personal)
 
     # Recent Stats
     NUM_OF_DAYS = 10
@@ -46,8 +47,10 @@ def momentumStats() -> str:
     recentData.reverse()
     recentTotalReviews = reduce(lambda acc, item: acc + item[1], recentData, 0)
     recentAvg = floor(recentTotalReviews / NUM_OF_DAYS)
-    recentWorst = min([num for _, num in recentData])
-    recentBest = max([num for _, num in recentData])
+
+    recent = [num for dateStr, num in recentData if not dateStr == todayString]
+    recentWorst = min(recent)
+    recentBest = max(recent)
 
     # Today's Stats
     todaysTotal = dataSet[todayString] if todayString in dataSet else 0
@@ -67,6 +70,7 @@ def momentumStats() -> str:
     chartdata = json.dumps(
         {
             "recentData": recentData,
+            "recentBest": recentBest,
             "todaysTotal": todaysTotal,
             "improvement": improvement,
             "personalWorst": personalWorst,
