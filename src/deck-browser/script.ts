@@ -8,9 +8,7 @@ const chartData = getChartData();
 
 const reviewed = document.querySelector(".reviewed__num");
 if (reviewed)
-    reviewed.textContent = `${chartData.todaysTotal.toLocaleString()} ${
-        chartData.displayImprovment
-    }`;
+    reviewed.textContent = `${chartData.todaysTotal.toLocaleString()}`;
 
 const statLine = document.querySelector(".stat-line");
 statLine?.append(
@@ -19,7 +17,7 @@ statLine?.append(
     renderStat("Total Reviews: ", chartData.totalReviews)
 );
 
-const newChart = renderChart(chartData.last10);
+const newChart = renderChart(chartData.recentData);
 if (newChart)
     document.querySelector(".chart-placeholder")?.replaceWith(newChart);
 

@@ -1,7 +1,7 @@
 import pathlib
 import json
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import reduce
 from math import floor
 
@@ -15,38 +15,43 @@ from aqt.overview import Overview, OverviewContent
 
 
 def momentumStats() -> str:
+    # By default each day starts at 4am (Configured in the user's anki settings)
+    HOURS_TO_SECONDS = 3600
+    nextDayOffset = datetime.fromtimestamp(mw.col.crt).hour  # 4hrs by default
+    #  Example: '2024-07-11'
+    todayString = (datetime.now() - timedelta(hours=nextDayOffset)).strftime("%Y-%m-%d")
 
-    # Pull Review data from the DB
-    NUM_OF_DAYS = 10  # 100
-    nextDayOffset = datetime.fromtimestamp(mw.col.crt).hour * 3600
-    # statList = mw.col.db.all(
-    #     f"SELECT DATE(id / 1000 - {nextDayOffset}, 'unixepoch', 'localtime') AS day, COUNT() FROM revlog GROUP BY day ORDER BY day DESC LIMIT {NUM_OF_DAYS}"
-    # )
-    statList = mw.col.db.all(
-        f"SELECT DATE(id / 1000 - {nextDayOffset}, 'unixepoch', 'localtime') AS day, COUNT() FROM revlog GROUP BY day ORDER BY day DESC"
+    # Count how many cards have been reviewed each day
+    #   "id" in the table stores epoch time in milliseconds
+    #   Most recent days are first in the array
+    statList: list[tuple[str, int]] = mw.col.db.all(
+        f"SELECT DATE(id / 1000 - {nextDayOffset * HOURS_TO_SECONDS}, 'unixepoch', 'localtime') AS day, COUNT() FROM revlog GROUP BY day ORDER BY day DESC"
     )
+    # Example: { "2023-07-32": 143, "2024-07-11": 43}
+    dataSet = dict(statList)
 
-    # Convert data form Array --> Dictionary
-    # Data Example: (2023-07-32, 143)
-    dataSet = {}
-    for date, count in statList:
-        dataSet[date] = count
-    # reviewList = map(lambda item: item[1], statList)
-
-    # Calculate Stats
+    # All Time Stats
     totalReviews = reduce(lambda acc, item: acc + item[1], statList, 0)
     totalDays = len(statList)
-    avg = floor(totalReviews / NUM_OF_DAYS)
     personalWorst = min(map(lambda item: item[1], statList))
     personalBest = max(map(lambda item: item[1], statList))
 
-    # Today's Stats
-    todayString = datetime.now().strftime("%Y-%m-%d")
-    todaysTotal = dataSet[todayString] if todayString in dataSet else 0
-    improvement = round((todaysTotal / avg - 1) * 100)
+    # Recent Stats
+    NUM_OF_DAYS = 10
+    recentData = (
+        statList[:NUM_OF_DAYS]
+        if todayString in dataSet
+        else [(todayString, 0)] + statList[: NUM_OF_DAYS - 1]
+    )
+    recentData.reverse()
+    recentTotalReviews = reduce(lambda acc, item: acc + item[1], recentData, 0)
+    recentAvg = floor(recentTotalReviews / NUM_OF_DAYS)
+    recentWorst = min([num for _, num in recentData])
+    recentBest = max([num for _, num in recentData])
 
-    # Render the Data to HTML
-    displayImprovment = f"({improvement}%)" if improvement > 0 else f""
+    # Today's Stats
+    todaysTotal = dataSet[todayString] if todayString in dataSet else 0
+    improvement = todaysTotal / recentAvg - 1
 
     # Get the HTML
     path = (
@@ -61,9 +66,9 @@ def momentumStats() -> str:
     # Prepare stats in a a JSON format, to be sent to the frontend
     chartdata = json.dumps(
         {
-            "last10": statList[:NUM_OF_DAYS],
+            "recentData": recentData,
             "todaysTotal": todaysTotal,
-            "displayImprovment": displayImprovment,
+            "improvement": improvement,
             "personalWorst": personalWorst,
             "personalBest": personalBest,
             "totalDays": totalDays,

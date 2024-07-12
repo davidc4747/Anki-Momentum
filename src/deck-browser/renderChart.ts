@@ -4,14 +4,14 @@ import { select, line, area, scaleLinear, extent, mean } from "d3";
     #Chart
 \* ======================== */
 
-export function renderChart(last10: [string, number][]): HTMLElement {
+export function renderChart(recentData: [string, number][]): HTMLElement {
     // Containing Div
     const chartElem = document.createElement("div");
     chartElem.classList.add("chart");
 
     // Svg
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    drawLineGraph(svg, last10);
+    drawLineGraph(svg, recentData);
     if (svg) chartElem.appendChild(svg);
 
     // all done
@@ -104,7 +104,7 @@ function drawLineGraph(svgElem: SVGSVGElement, data: [string, number][]): void {
             tooltip.style("opacity", 1);
 
             // Set Text values
-            tooltipDate.text(new Date(date).toLocaleDateString());
+            tooltipDate.text(new Date(`${date}T00:00:00`).toLocaleDateString());
             tooltipReviews.text(reviews);
 
             /* -------------------------------- *\

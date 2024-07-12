@@ -2,10 +2,12 @@ declare const pycmd: (cmd: string) => void;
 declare const chartData: ChartData;
 
 type ChartData = {
-    last10: [string, number][]; // <"2023-07-3", 143>
+    recentData: [string, number][]; // <"2023-07-3", 143>
     // fullHistory: Map<string, number>; // <"2023-07-3", 143>
+
     todaysTotal: number;
-    displayImprovment: string;
+    improvement: number;
+
     personalWorst: number;
     personalBest: number;
     totalDays: number;
@@ -14,7 +16,7 @@ type ChartData = {
 
 export function testData(): ChartData {
     return {
-        last10: [
+        recentData: [
             ["2023-10-08", 18],
             ["2023-10-07", 78],
             ["2023-09-30", 18],
@@ -27,7 +29,7 @@ export function testData(): ChartData {
             ["2023-09-03", 77],
         ],
         todaysTotal: 0,
-        displayImprovment: "",
+        improvement: 0.02,
         personalWorst: 1,
         personalBest: 356,
         totalDays: 552,
