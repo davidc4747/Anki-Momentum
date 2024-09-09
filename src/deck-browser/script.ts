@@ -68,9 +68,15 @@ function renderTotalDays(totalDays: number): HTMLLIElement {
     // value
     const span = document.createElement("span");
     span.classList.add("highlight");
-    span.textContent = `${totalDays.toLocaleString()} (${(
-        totalDays / 365
-    ).toFixed(1)}) yrs`;
+
+    if (totalDays >= 365)
+        span.textContent = `${totalDays.toLocaleString()} (${(
+            totalDays / 365
+        ).toFixed(1)} yrs)`;
+    else
+        span.textContent = `${totalDays.toLocaleString()} (${(
+            totalDays / 30
+        ).toFixed(1)} mo)`;
 
     // Add to parent element
     const li = document.createElement("li");

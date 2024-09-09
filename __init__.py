@@ -10,10 +10,8 @@ from aqt.deckbrowser import DeckBrowser, DeckBrowserContent
 from aqt.overview import Overview, OverviewContent
 
 
-# Edit UI Elements
+# Homepage Graph
 #########################################################################
-
-
 def momentumStats() -> str:
     # By default each day starts at 4am (Configured in the user's anki settings)
     HOURS_TO_SECONDS = 3600
@@ -24,8 +22,11 @@ def momentumStats() -> str:
     # Count how many cards have been reviewed each day
     #   "id" in the table stores epoch time in milliseconds
     #   Most recent days are first in the array
+    REVLOG_RESCHED = 4
     statList: list[tuple[str, int]] = mw.col.db.all(
-        f"SELECT DATE(id / 1000 - {nextDayOffset * HOURS_TO_SECONDS}, 'unixepoch', 'localtime') AS day, COUNT() FROM revlog GROUP BY day ORDER BY day DESC"
+        f"""SELECT DATE(id / 1000 - {nextDayOffset * HOURS_TO_SECONDS}, 'unixepoch', 'localtime') AS day,
+         COUNT() 
+         FROM revlog WHERE type != {REVLOG_RESCHED} GROUP BY day ORDER BY day DESC"""
     )
     # Example: { "2023-07-32": 143, "2024-07-11": 43}
     dataSet = dict(statList)
@@ -34,8 +35,8 @@ def momentumStats() -> str:
     totalReviews = reduce(lambda acc, item: acc + item[1], statList, 0)
     totalDays = len(statList)
     personal = [num for dateStr, num in statList if not dateStr == todayString]
-    personalWorst = min(personal)
-    personalBest = max(personal)
+    personalWorst = min(personal) if len(personal) > 0 else 0
+    personalBest = max(personal) if len(personal) > 0 else 0
 
     # Recent Stats
     NUM_OF_DAYS = 10
@@ -49,12 +50,12 @@ def momentumStats() -> str:
     recentAvg = floor(recentTotalReviews / NUM_OF_DAYS)
 
     recent = [num for dateStr, num in recentData if not dateStr == todayString]
-    recentWorst = min(recent)
-    recentBest = max(recent)
+    recentWorst = min(recent) if len(recent) > 0 else 0
+    recentBest = max(recent) if len(recent) > 0 else 0
 
     # Today's Stats
     todaysTotal = dataSet[todayString] if todayString in dataSet else 0
-    improvement = todaysTotal / recentAvg - 1
+    improvement = todaysTotal / recentAvg - 1 if recentAvg > 0 else 0
 
     # Get the HTML
     path = (
@@ -93,15 +94,6 @@ def momentumStats() -> str:
 def hideReviewNumbers(deck_browser: DeckBrowser, content: DeckBrowserContent) -> None:
     content.stats = f"{momentumStats()}{content.stats}"
     content.tree += """
-		<script type="module"> 
-            document.querySelectorAll("td.decktd > a.deck").forEach(ele => {
-                const oldClick = ele.onclick;
-                ele.onclick = function () {
-                    oldClick();
-                    setTimeout(() => pycmd("study"), 0);
-                }
-            })
-		</script>
         <style> 
             tr:first-child > th.count { text-align: center; }
             .new-count, .learn-count, .review-count, .zero-count {
@@ -134,7 +126,7 @@ def hideOverviewNumbers(overview: Overview, content: OverviewContent) -> None:
 		</script>
         <style> 
             button#study { margin: 1rem 0; } 
-            .new-count, .learn-count, .review-count, .zero-count { visibility: hidden }
+            .new-count, .learn-count, .review-count, .zero-count, .bury-count { visibility: hidden }
         </style>
 		"""
 

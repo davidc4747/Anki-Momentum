@@ -2,10 +2,13 @@
 screenshots/
 assets/
 docs/
-__pycache__/
 
 #Elm
 elm-stuff/
+#Python
+__pycache__/
+#Anki Addon
+meta.json
 
 # Large Files
 *.mp4
